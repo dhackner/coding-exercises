@@ -2,14 +2,16 @@
 
 
 step_sizes = [1, 2, 3]
+answers = {0: 1}
 
 
 def how_many(stair_length):
-    if stair_length == 0:
-        return 1
     if stair_length < 0:
         return 0
-    return sum([how_many(stair_length - step_size) for step_size in step_sizes])
+    elif stair_length not in answers:
+        answers[stair_length] = sum([how_many(stair_length - step_size) for step_size in step_sizes])
+
+    return answers[stair_length]
 
 assert how_many(-11) == 0
 assert how_many(1) == 1
