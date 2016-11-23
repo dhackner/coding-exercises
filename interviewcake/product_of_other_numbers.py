@@ -23,7 +23,7 @@ def first_pass_products(array):
             right_product *= array[index]
 
 
-def products(array):
+def final_answer_products(array):
     if array is None or len(array) < 2:
         raise Exception()
     else:
@@ -39,25 +39,42 @@ def products(array):
             product *= array[index]
         return products
 
+
+def products_with_division(array):
+    try:
+        idx_of_0 = array.index(0)
+    except ValueError:
+        total_product = reduce(lambda x, y: x*y, array)
+        return [total_product / element for element in array]
+    else:
+        # If there is exactly one 0, then there still exists a product when that
+        # index is being excluded, otherwise it's all 0's
+        product = reduce(lambda x, y: x*y, array[:idx_of_0]+array[idx_of_0 + 1:])
+        prefix = [0] * idx_of_0
+        post_count = len(array) - idx_of_0 - 1  # -1 because of product
+        postfix = [0] * post_count
+        return prefix + [product] + postfix
+
 try:
-    products(None)
+    products_with_division(None)
     assert False
 except Exception:
     pass
 try:
-    products([])
+    products_with_division([])
     assert False
 except Exception:
     pass
 try:
-    products([1])
+    products_with_division([1])
     assert False
 except Exception:
     pass
 
-assert set(products([1, 7, 3, 4])) == set([84, 12, 28, 21])  # Example case
-assert set(products([7, 3, 4])) == set([12, 28, 21])  # Checking for an off by 1 error
-assert set(products([3, 4])) == set([3, 4])  # Checking for an off by 1 error
+assert set(products_with_division([1, 7, 3, 4])) == set([84, 12, 28, 21])  # Example case
+assert set(products_with_division([7, 3, 4])) == set([12, 28, 21])  # Checking for an off by 1 error
+assert set(products_with_division([3, 4])) == set([3, 4])  # Checking for an off by 1 error
 # Learning: Don't forget the 0 case with math
-assert set(products([0, 1, 2])) == set([2, 0, 0])  # 0 case
+assert set(products_with_division([0, 1, 2])) == set([2, 0, 0])  # Single-0 case
+assert set(products_with_division([0, 1, 0])) == set([0, 0, 0])  # Multi-0 case
 print 'OK'
