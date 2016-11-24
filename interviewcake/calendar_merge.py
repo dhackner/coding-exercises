@@ -28,14 +28,19 @@ def merge(array1, array2):
 
         # print '%s %s' % (elem1, elem2)
 
-        # If overlap, merge
         # Learning: Stay calm with off-by-ones. Slowly examine each less than and greater than. Should it be equals as well? Does something need to fit more than one bound?
-        if elem2[start] <= elem1[end] and elem2[start] >= elem1[start]:
-            return_array.append((elem1[start], elem2[end]))
-            idx1 += 1
-            idx2 += 1
-        elif elem1[start] <= elem2[end] and elem1[start] >= elem2[start]:
-            return_array.append((elem2[start], elem1[end]))
+
+        # Explicit logic:
+        # (A1, A2) (B1, B2) => if (B1 < A2 and B2 > A1) or (A1 < B2 and A2 > B1), return (min(A1, A2), max(B1, B2))
+        # if elem1[start] <= elem2[end] and elem1[end] >= elem2[start] or\
+            # elem2[start] <= elem1[end] and elem2[end] >= elem1[start]:
+        min_start = min(elem1[start], elem2[start])
+        max_start = max(elem1[start], elem2[start])
+        min_end = min(elem1[end], elem2[end])
+        max_end = max(elem1[end], elem2[end])
+        # If overlap, merge
+        if max_start <= min_end:
+            return_array.append((min_start, max_end))
             idx1 += 1
             idx2 += 1
 
