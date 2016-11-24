@@ -8,12 +8,12 @@
 # Assumption: Well formed input of end > start
 
 
-def calendar_merge(meeting_times):
+def calendar_mergesort(meeting_times):
     if meeting_times is None or len(meeting_times) <= 1:
         # Base case is 1 or 0
         return meeting_times
     halfway = len(meeting_times) // 2
-    return merge(calendar_merge(meeting_times[:halfway]), calendar_merge(meeting_times[halfway:]))
+    return merge(calendar_mergesort(meeting_times[:halfway]), calendar_mergesort(meeting_times[halfway:]))
 
 # Learning: Enums for clarity
 start, end = 0, 1
@@ -79,6 +79,33 @@ def merge(array1, array2):
     return return_array
 
 
+def calendar_merge(meeting_times):
+    # Provided solution from website
+    if meeting_times is None or len(meeting_times) <= 1:
+        # Base case is 1 or 0
+        return meeting_times
+    meeting_times = sorted(meeting_times)
+    return_array = [meeting_times[0]]
+    for current_start, current_end in meeting_times[1:]:
+        if return_array[-1][end] >= current_start:
+            return_array[-1] = (return_array[-1][start], max(return_array[-1][end], current_end))
+        else:
+            return_array.append((current_start, current_end))
+
+    return return_array
+
+
+assert calendar_mergesort(None) is None
+assert calendar_mergesort([]) == []
+assert calendar_mergesort([(1, 3)]) == [(1, 3)]
+assert calendar_mergesort([(0, 1), (3, 5)]) == [(0, 1), (3, 5)]  # No overlap
+assert calendar_mergesort([(0, 1), (1, 5)]) == [(0, 5)]  # Simple touch
+assert calendar_mergesort([(0, 2), (1, 5)]) == [(0, 5)]  # Simple overlap
+assert calendar_mergesort([(0, 1), (3, 5), (4, 8), (10, 12), (9, 10)]) == [(0, 1), (3, 8), (9, 12)]  # Example case
+assert calendar_mergesort([(1, 5), (2, 3)]) == [(1, 5)]
+assert calendar_mergesort([(1, 10), (2, 6), (3, 5), (7, 9)]) == [(1, 10)]
+assert calendar_mergesort([(1, 7), (2, 6), (3, 5), (7, 9)]) == [(1, 9)]
+
 assert calendar_merge(None) is None
 assert calendar_merge([]) == []
 assert calendar_merge([(1, 3)]) == [(1, 3)]
@@ -87,4 +114,6 @@ assert calendar_merge([(0, 1), (1, 5)]) == [(0, 5)]  # Simple touch
 assert calendar_merge([(0, 2), (1, 5)]) == [(0, 5)]  # Simple overlap
 assert calendar_merge([(0, 1), (3, 5), (4, 8), (10, 12), (9, 10)]) == [(0, 1), (3, 8), (9, 12)]  # Example case
 assert calendar_merge([(1, 5), (2, 3)]) == [(1, 5)]
+assert calendar_merge([(1, 10), (2, 6), (3, 5), (7, 9)]) == [(1, 10)]
+assert calendar_merge([(1, 7), (2, 6), (3, 5), (7, 9)]) == [(1, 9)]
 print 'OK'
