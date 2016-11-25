@@ -13,6 +13,18 @@ class BinaryTreeNode:
         self.right = BinaryTreeNode(value)
         return self.right
 
+    def in_order(self):
+        return_list = []
+        if self.left:
+            return_list.extend(self.left.in_order())
+        return_list.append(self.value)
+        if self.right:
+            return_list.extend(self.right.in_order())
+        return return_list
+
+    def simple_is_valid(self):
+        return self.in_order() == sorted(self.in_order())
+
     def is_valid(self, min_compare=None, max_compare=None):
         # A node is valid if it is < any ancestors it is to the left of and >
         # any ancestors it is to the right of. So define min/max bounds for a
@@ -44,6 +56,8 @@ root.insert_right(7)
 root.right.insert_left(5)
 root.right.insert_right(8)
 assert root.is_valid()
+assert root.simple_is_valid()
 root.right.left.insert_left(1)
 assert not root.is_valid()
+assert not root.simple_is_valid()
 print 'OK'
